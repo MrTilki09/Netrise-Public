@@ -1,37 +1,163 @@
-<div align="center"><img src="URL_TO_YOUR_LOGO" alt="Netrise Logo" width="150" /><h1>Netrise</h1><p>A hyper-personalized digital advertising and campaign platform built on GCP and Firebase.</p><p><a href="https://github.com/YOUR_USERNAME/YOUR_REPO/actions"><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/YOUR_REPO/main.yml?branch=main&style=for-the-badge"></a><img alt="Framework" src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"><img alt="Framework" src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"><img alt="Platform" src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black"><img alt="Platform" src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white"><a href="https://github.com/YOUR_USERNAME/YOUR_REPO/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=blue"></a></p></div>Netrise is a full-stack mobile advertising platform designed to deliver hyper-personalized campaign recommendations to users. It connects companies (advertisers) with end-users through a recommendation engine built on BigQuery, Dataform, and Cloud Run, all orchestrated within the Google Cloud ecosystem.## Core FeaturesFor Users: A personalized feed of campaigns, interest profiling, loyalty/badge systems, and engagement (likes/bookmarks).For Companies: A full admin panel to create and manage campaigns, with targeting based on city, user interests, and age.Recommendation Engine: A robust backend system that processes user signals (views, clicks, likes, bookmarks) with decay to generate tailored recommendations.Cold Start Handling: Provides global popular companies for new users and uses a company's score plus a freshness bonus for new campaigns.## Tech StackThis project is a full-stack, cloud-native application primarily using GCP and a JavaScript/TypeScript stack.AreaTechnologyPurposeMobile AppReact Native (CLI)Cross-platform (iOS/Android) user application.NativeWind/TailwindStyling and UI.React QueryServer state management and caching.FCM (Firebase)Push notifications for campaigns and activity.Web AdminNext.js 13+ (App Router)Admin dashboard for company campaign management.Velzon TemplateUI kit for the admin panel.Firestore Web SDKReal-time data sync for admin operations.Backend & InfraFirebase AuthUser authentication (Mobile/Web).FirestorePrimary application database (NoSQL).Cloud Functions (Gen2)Event-driven triggers (e.g., on user create).Pub/SubAsynchronous messaging queue for background tasks.Cloud RunServerless worker for consuming Pub/Sub messages and running recommendation logic.Data & MLBigQueryData warehouse for all raw and cleaned event data.Firestore to BQ ExtensionReal-time data export from Firestore to BigQuery.DataformSQLX-based ETL/ELT to build cleaned views and precomputed recommendation tables.## System Architecture & Data FlowThe recommendation engine is event-driven and runs on a decoupled architecture:User Creation: A new user signs up in the mobile app, creating a document in users/{uid} in Firestore.Event Trigger: A 2nd Gen Firestore trigger fires on...create and publishes a message (containing uid, city, etc.) to the bootstrap-requests-dev Pub/Sub topic.Async Processing: A Cloud Run worker, subscribed to the bootstrap-requests-dev topic, consumes this message.Recommendation Generation:The worker queries BigQuery for the user's profile segments (vw_user_profile_segments).It fetches precomputed candidate sets (e.g., precomputed_company_candidates, precomputed_campaign_candidates) which are refreshed by Dataform schedules.It applies MVP business logic (rule-based segmentation, activity filters, freshness bonuses).Writeback: The final list of recommended campaign/company IDs is written back to Firestore under the user's document (e.g., users/{uid}/recommended_campaigns).App Display: The React Native app listens to this Firestore document in real-time (or fetches via React Query) to display the personalized feed.## Recommendation Engine Deep DiveThe core of this project is its data modeling and scoring logic, built in BigQuery and Dataform.Key Signals & DecayUser interactions are weighted using exponential decay to prioritize recent activity.SignalDecay Half-life (τ)Click14 daysImpression10 daysDwell Time21 daysLike30 daysBookmark30 daysNot Interested30 daysCompany Popularity ScoreThe popular_companies table is a key input. A company's overall score is calculated as a weighted sum of various metrics:SQL/* Company Popularity Score Formula */
-pop_score = 0.35*w_lb_ctr         /* Wilson Lower Bound CTR */
-          + 0.15*ctr_bb           /* Beta-Bayesian CTR */
-          + 0.15*dwell_norm       /* Normalized Dwell Time */
-          + 0.12*like_rate_bb     /* Beta-Bayesian Like Rate */
-          - 0.20*notint_rate_bb   /* Beta-Bayesian Not-Interested Rate */
-          + 0.10*bookmark_rate_bb /* Beta-Bayesian Bookmark Rate */
-          + 0.05*log(1+unique_clickers)
-          + 0.08*novelty
-Source: data_modeling.mdKey Data Models (BigQuery)cleaned_user_company_impressions: Deduplicates views within a 2-second window.cleaned_user_company_clicks: Captures dwell_seconds.feature_stats_daily: Stores daily pre-calculated stats like prior_ctr_30d.popular_companies: Main scoring table, windowed for 1, 7, and 30 days.cleaned_campaigns: Parses raw JSON changelogs into a structured table with active time windows (start_at, end_at).## Getting StartedPrerequisitesNode.js (v18+)Yarn or npmGCP Account with Firebase & BigQuery enabledFirebase CLI (npm install -g firebase-tools)Access to a development.json or .env file with service account keys.Project StructureBash.
-├── /dataform/          # Dataform SQLX models and schedules
-├── /mobile/            # React Native mobile app (users)
-├── /web-admin/         # Next.js admin panel (companies)
-├── /backend/
-│   ├── /functions/     # Cloud Functions (Gen2) for triggers
-│   └── /worker/        # Cloud Run worker (Dockerized)
-└── ...
-Installation & RunningClone the repository:Bashgit clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO
-Setup Mobile App:Bashcd mobile
-npm install
-# Add .env file with Firebase config
-npx pod-install  # For iOS
-npm run android  # Or npm run ios
-Setup Web Admin:Bashcd web-admin
-npm install
-# Add .env.local file with Firebase config
-npm run dev
-Deploy Backend:Bashcd backend/functions
-npm install
-firebase deploy --only functions
+Here is a template that is "fancy" and high-level, focusing on visual appeal rather than deep technical details.
 
-cd backend/worker
-# Build and deploy Docker image to Cloud Run
-# (Requires gcloud CLI)
-gcloud run deploy ...
-## ContributingContributions are welcome! Please open an issue to discuss your ideas or submit a pull request with your changes.Fork the repositoryCreate your feature branch (git checkout -b feature/AmazingFeature)Commit your changes (git commit -m 'Add some AmazingFeature')Push to the branch (git push origin feature/AmazingFeature)Open a Pull Request## LicenseThis project is licensed under the MIT License - see the LICENSE file for details.
+This format uses a centered header, lots of badges, and icons for the tech stack to look professional on a GitHub profile.
+
+-----
+
+````markdown
+<div align="center">
+
+  <img src="URL_TO_YOUR_LOGO" alt="Netrise Logo" width="200" />
+
+  <h1>Netrise</h1>
+
+  <p>
+    A hyper-personalized digital advertising and campaign platform.
+  </p>
+
+  <p>
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/stargazers">
+      <img alt="Stargazers" src="https://img.shields.io/github/stars/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=FFCA28&logo=github&logoColor=black">
+    </a>
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/issues">
+      <img alt="Issues" src="https://img.shields.io/github/issues/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=4285F4&logo=github">
+    </a>
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/blob/main/LICENSE">
+      <img alt="License" src="https://img.shields.io/github/license/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=blue">
+    </a>
+    <br>
+    <img alt="Tech" src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
+    <img alt="Tech" src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
+    <img alt="Tech" src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black">
+    <img alt="Tech" src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white">
+  </p>
+  
+</div>
+
+<p align="center">
+  <img src="URL_TO_YOUR_DEMO_GIF" alt="Netrise App Demo" width="800" />
+</p>
+
+## ## 💡 About The Project
+
+Netrise is a full-stack mobile platform that connects companies and users through a smart, personalized campaign feed. It's built for scale, using a modern, event-driven architecture on Google Cloud.
+
+The goal is to deliver the *right content* to the *right user* at the *right time*.
+
+---
+
+## ## ✨ Core Features
+
+| For Users | For Companies (Admin) |
+| :--- | :--- |
+| 👤 Interest-based profiling | 📈 Dashboard & Analytics |
+| 🔥 Personalized campaign feed | 🎯 Targeted campaign creation |
+| 🏆 Badges & Loyalty rewards | 🏙️ Targeting by city, age, & interest |
+| ❤️ Likes, Bookmarks & Engagement | 🔔 Real-time notifications |
+
+---
+
+## ## 🚀 Tech Stack
+
+This project is built with a cutting-edge, scalable tech stack.
+
+<p align="center">
+  <a href="https://reactnative.dev/">
+    <img src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Native">
+  </a>
+  <a href="https://nextjs.org/">
+    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js">
+  </a>
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  </a>
+  <a href="https://firebase.google.com/">
+    <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase">
+  </a>
+  <a href="https://cloud.google.com/">
+    <img src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Google Cloud">
+  </a>
+  <a href="https://cloud.google.com/bigquery">
+    <img src="https://img.shields.io/badge/BigQuery-E670B2?style=for-the-badge&logo=bigquery&logoColor=white" alt="BigQuery">
+  </a>
+  <a href="https://cloud.google.com/run">
+    <img src="https://img.shields.io/badge/Cloud_Run-2596be?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Cloud Run">
+  </a>
+  <a href="https://www.nativewind.dev/">
+    <img src="https://img.shields.io/badge/NativeWind-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="NativeWind">
+  </a>
+</p>
+
+| Area | Technologies |
+| :--- | :--- |
+| **Mobile App** | React Native, NativeWind/Tailwind, React Query |
+| **Web Admin** | Next.js (App Router), Velzon (UI) |
+| **Backend & Infra**| Firebase (Auth, Firestore), Cloud Functions, Pub/Sub, Cloud Run |
+| **Data Pipeline** | BigQuery, Dataform (SQLX) |
+
+---
+
+## ## 🏁 Getting Started
+
+Ready to run the project?
+
+### **1. Clone the Repo**
+```bash
+git clone [https://github.com/YOUR_USERNAME/YOUR_REPO.git](https://github.com/YOUR_USERNAME/YOUR_REPO.git)
+cd netrise
+````
+
+### **2. Run the Mobile App**
+
+```bash
+cd mobile
+npm install
+# Add your .env file with Firebase keys
+npx pod-install # (For iOS)
+npm run android # or npm run ios
+```
+
+### **3. Run the Web Admin**
+
+```bash
+cd web-admin
+npm install
+# Add your .env.local file with Firebase keys
+npm run dev
+# Open http://localhost:3000
+```
+
+-----
+
+## \#\# 🤝 Contributing
+
+Contributions are what make the open-source community amazing. Any contributions you make are **greatly appreciated**.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+-----
+
+## \#\# 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+-----
+
+\<div align="center"\>
+\<h3\>Find Me\</h3\>
+\<p\>
+\<a href="https://www.google.com/search?q=https://www.linkedin.com/in/YOUR\_USERNAME"\>
+\<img alt="LinkedIn" src="https://www.google.com/search?q=https://img.shields.io/badge/LinkedIn-0A66C2%3Fstyle%3Dfor-the-badge%26logo%3Dlinkedin%26logoColor%3Dwhite"\>
+\</a\>
+\<a href="https://twitter.com/YOUR\_USERNAME"\>
+\<img alt="Twitter" src="https://www.google.com/search?q=https://img.shields.io/badge/Twitter-1DA1F2%3Fstyle%3Dfor-the-badge%26logo%3Dtwitter%26logoColor%3Dwhite"\>
+\</a\>
+\</p\>
+\</div\>
+
+```
+```

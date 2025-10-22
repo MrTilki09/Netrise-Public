@@ -3,27 +3,18 @@
 
   <img src="URL_TO_YOUR_LOGO" alt="Netrise Logo" width="200" />
 
-  <h1>Netrise</h1>
+  <h1>Netrise (Private Project)</h1>
 
   <p>
-    A hyper-personalized digital advertising and campaign platform.
+    A hyper-personalized digital advertising and campaign platform built on GCP and Firebase.
   </p>
 
   <p>
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/stargazers">
-      <img alt="Stargazers" src="https://img.shields.io/github/stars/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=FFCA28&logo=github&logoColor=black">
-    </a>
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/issues">
-      <img alt="Issues" src="https://img.shields.io/github/issues/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=4285F4&logo=github">
-    </a>
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/blob/main/LICENSE">
-      <img alt="License" src="https://img.shields.io/github/license/YOUR_USERNAME/YOUR_REPO?style=for-the-badge&color=blue">
-    </a>
-    <br>
     <img alt="Tech" src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
     <img alt="Tech" src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
     <img alt="Tech" src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black">
     <img alt="Tech" src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white">
+    <img alt="Tech" src="https://img.shields.io/badge/BigQuery-E670B2?style=for-the-badge&logo=bigquery&logoColor=white">
   </p>
   
 </div>
@@ -34,9 +25,9 @@
 
 ## ## 💡 About The Project
 
-Netrise is a full-stack mobile platform that connects companies and users through a smart, personalized campaign feed. It's built for scale, using a modern, event-driven architecture on Google Cloud.
+Netrise is a full-stack, cloud-native mobile platform that connects companies and users through a smart, personalized campaign feed. It's built for scale using a modern, event-driven architecture on Google Cloud.
 
-The goal is to deliver the *right content* to the *right user* at the *right time*.
+The goal is to deliver the *right content* to the *right user* at the *right time* by processing user signals (views, clicks, likes) to generate tailored recommendations.
 
 ---
 
@@ -51,9 +42,9 @@ The goal is to deliver the *right content* to the *right user* at the *right tim
 
 ---
 
-## ## 🚀 Tech Stack
+## ## 🚀 Tech Stack & Architecture
 
-This project is built with a cutting-edge, scalable tech stack.
+This project is built with a scalable, cloud-native tech stack.
 
 <p align="center">
   <a href="https://reactnative.dev/">
@@ -86,18 +77,29 @@ This project is built with a cutting-edge, scalable tech stack.
 | :--- | :--- |
 | **Mobile App** | React Native, NativeWind/Tailwind, React Query |
 | **Web Admin** | Next.js (App Router), Velzon (UI) |
-| **Backend & Infra**| Firebase (Auth, Firestore), Cloud Functions, Pub/Sub, Cloud Run |
-| **Data Pipeline** | BigQuery, Dataform (SQLX) |
+| **Backend & Infra**| Firebase (Auth, Firestore), Cloud Functions (Gen2), Pub/Sub, Cloud Run |
+| **Data Pipeline** | BigQuery, Dataform (SQLX), Firestore → BQ Extensions |
+
+### System Architecture Flow
+
+The recommendation engine is event-driven and runs on a decoupled architecture:
+
+1.  **Event:** A new user signs up, triggering a 2nd Gen Firestore Cloud Function.
+2.  **Queue:** The function publishes a message to a Pub/Sub topic.
+3.  **Process:** A Cloud Run worker consumes the message.
+4.  **Query:** The worker queries pre-computed BigQuery views (built by Dataform) to get recommendations.
+5.  **Writeback:** The worker writes the final recommendations back to the user's document in Firestore.
+6.  **Display:** The React Native app reads these recommendations in real-time.
 
 ---
 
 ## ## 🏁 Getting Started
 
-Ready to run the project?
+(Instructions for running the project locally)
 
 ### **1. Clone the Repo**
 ```bash
-git clone [https://github.com/YOUR_USERNAME/YOUR_REPO.git](https://github.com/YOUR_USERNAME/YOUR_REPO.git)
+git clone [YOUR_REPO_URL]
 cd netrise
 ````
 
@@ -123,26 +125,14 @@ npm run dev
 
 -----
 
-## \#\# 🤝 Contributing
-
-Contributions are what make the open-source community amazing. Any contributions you make are **greatly appreciated**.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
-
------
-
 ## \#\# 📜 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is proprietary and confidential.
 
 -----
 
 \<div align="center"\>
-\<h3\>Find Me\</h3\>
+\<h3\>Contact\</h3\>
 \<p\>
 \<a href="https://www.google.com/search?q=https://www.linkedin.com/in/YOUR\_USERNAME"\>
 \<img alt="LinkedIn" src="https://www.google.com/search?q=https://img.shields.io/badge/LinkedIn-0A66C2%3Fstyle%3Dfor-the-badge%26logo%3Dlinkedin%26logoColor%3Dwhite"\>

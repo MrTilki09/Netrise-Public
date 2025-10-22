@@ -19,9 +19,9 @@
   
 </div>
 
-<p align="center">
+<!-- <p align="center">
   <img src="URL_TO_YOUR_DEMO_GIF" alt="Netrise App Demo" width="800" />
-</p>
+</p> -->
 
 ## ## 💡 About The Project
 

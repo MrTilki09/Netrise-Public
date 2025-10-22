@@ -93,55 +93,14 @@ The recommendation engine is event-driven and runs on a decoupled architecture:
 
 ---
 
-## ## 🏁 Getting Started
 
-(Instructions for running the project locally)
-
-### **1. Clone the Repo**
-```bash
-git clone [YOUR_REPO_URL]
-cd netrise
-````
-
-### **2. Run the Mobile App**
-
-```bash
-cd mobile
-npm install
-# Add your .env file with Firebase keys
-npx pod-install # (For iOS)
-npm run android # or npm run ios
-```
-
-### **3. Run the Web Admin**
-
-```bash
-cd web-admin
-npm install
-# Add your .env.local file with Firebase keys
-npm run dev
-# Open http://localhost:3000
-```
-
------
 
 ## \#\# 📜 License
 
 This project is proprietary and confidential.
 
 -----
-
-\<div align="center"\>
-\<h3\>Contact\</h3\>
-\<p\>
-\<a href="https://www.google.com/search?q=https://www.linkedin.com/in/YOUR\_USERNAME"\>
-\<img alt="LinkedIn" src="https://www.google.com/search?q=https://img.shields.io/badge/LinkedIn-0A66C2%3Fstyle%3Dfor-the-badge%26logo%3Dlinkedin%26logoColor%3Dwhite"\>
-\</a\>
-\<a href="https://twitter.com/YOUR\_USERNAME"\>
-\<img alt="Twitter" src="https://www.google.com/search?q=https://img.shields.io/badge/Twitter-1DA1F2%3Fstyle%3Dfor-the-badge%26logo%3Dtwitter%26logoColor%3Dwhite"\>
-\</a\>
-\</p\>
-\</div\>
+<div align="center"> <h3>Contact</h3> <p> <a href="https://www.google.com/search?q=https://www.linkedin.com/in/YOUR_USERNAME"> <img alt="LinkedIn" src="https://www.google.com/search?q=https://img.shields.io/badge/LinkedIn-0A66C2%3Fstyle%3Dfor-the-badge%26logo%3Dlinkedin%26logoColor%3Dwhite"> </a> <a href="https://twitter.com/YOUR_USERNAME"> <img alt="Twitter" src="https://www.google.com/search?q=https://img.shields.io/badge/Twitter-1DA1F2%3Fstyle%3Dfor-the-badge%26logo%3Dtwitter%26logoColor%3Dwhite"> </a> </p> </div>
 
 ```
 ```

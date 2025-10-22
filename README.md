@@ -1,7 +1,7 @@
 
 <div align="center">
 
-  <img src="[URL_TO_YOUR_LOGO](https://firebasestorage.googleapis.com/v0/b/startup-e715a.firebasestorage.app/o/logo.png?alt=media&token=6610bca6-5edb-42f2-a8ff-6c35fb66d391)" alt="Netrise Logo" width="200" />
+  <img src="https://firebasestorage.googleapis.com/v0/b/startup-e715a.firebasestorage.app/o/logo.png?alt=media&token=6610bca6-5edb-42f2-a8ff-6c35fb66d391" alt="Netrise Logo" width="200" />
 
   <h1>Netrise (Private Project)</h1>
 

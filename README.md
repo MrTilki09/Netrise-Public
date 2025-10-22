@@ -1,10 +1,4 @@
-Here is a template that is "fancy" and high-level, focusing on visual appeal rather than deep technical details.
 
-This format uses a centered header, lots of badges, and icons for the tech stack to look professional on a GitHub profile.
-
------
-
-````markdown
 <div align="center">
 
   <img src="URL_TO_YOUR_LOGO" alt="Netrise Logo" width="200" />
